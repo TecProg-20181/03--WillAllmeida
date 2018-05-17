@@ -53,11 +53,23 @@ def loadWords():
 
     return random.choice(wordList)
 
+class Letter:
 
-def getAvailableLetters():
-    available = string.ascii_lowercase
+    def __init__(self):
 
-    return available
+        self.available = string.ascii_lowercase
+
+    def getAvailableLetters(self):
+
+        return self.available
+
+    def manageAvailableLetters(self, lettersGuessed):
+        for letter in self.available:
+            if letter in lettersGuessed:
+                self.available = self.available.replace(letter, '')
+
+        print 'Available letters', self.available
+        print '------------'
 
 
 def showWelcomeMessage(secretWord):
@@ -66,16 +78,10 @@ def showWelcomeMessage(secretWord):
     print 'I am thinking of a word that is', len(secretWord), ' letters long.'
     print '-------------'
 
-def manageAvailableLetters(available, lettersGuessed):
-    for letter in available:
-        if letter in lettersGuessed:
-            available = available.replace(letter, '')
-
-    print 'Available letters', available
-    print '------------'
 
 def hangman(secretWord):
     guess = Guess()
+    letters = Letter()
 
     lettersGuessed = []
 
@@ -87,9 +93,9 @@ def hangman(secretWord):
         print 'You have ', guess.getGuesses() , 'guesses left.'
 
         guessed = guess.getGuessedWord()
+        available = letters.getAvailableLetters()
 
-        available = getAvailableLetters()
-        manageAvailableLetters(available, lettersGuessed)
+        letters.manageAvailableLetters(lettersGuessed)
 
         letter = raw_input('Please guess a letter: ')
         print '------------'
@@ -104,6 +110,7 @@ def hangman(secretWord):
             lettersGuessed.append(letter)
 
             guessed = guess.isGuessedWord(letter, lettersGuessed, guessed)
+
             print 'Good Guess: ', guessed
 
         else:
@@ -111,6 +118,7 @@ def hangman(secretWord):
             lettersGuessed.append(letter)
 
             guessed = guess.isGuessedWord(letter, lettersGuessed, guessed)
+
             print 'Oops! That letter is not in my word: ',  guessed
             print '------------'
 
